@@ -1,0 +1,29 @@
+Origin: <%= origin %>
+Label: <%= label %>
+Suite: <%= suite %>
+Codename: <%= codename %>
+Version: <%= version %>
+Architectures: i386 amd64 source
+Components: main
+Description: <%= description %>
+SignWith: <%= keyid %>
+Uploaders: uploaders
+Tracking: minimal includelogs
+Pull: promote
+
+Origin: <%= origin %>
+Label: <%= label %>
+Suite: <%= suite %>
+Codename: <%= codename %>-proposed
+Version: <%= version %>
+Architectures: i386 amd64 source
+Components: main
+Description: <%= description %> (staging area)
+SignWith: <%= keyid %>
+SignWith: <%= keyid %>
+Uploaders: uploaders
+Tracking: minimal includelogs
+<% if mirror_on_launchpad -%>
+Log:
+ --changes --via=processincoming sign-and-upload
+<% end %>

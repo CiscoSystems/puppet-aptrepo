@@ -1,0 +1,17 @@
+# *** VERIFY AND UPDATE $mailto and $maintainer_name BELOW ***
+
+# Mail address where logs are sent to (mandatory, no default!)
+$mailto = 'buildd';
+
+# Name to use as override in .changes files for the Maintainer: field
+#$maintainer_name='buildd <buildd@localhost>';
+
+# Directory for chroot symlinks and sbuild logs.  Defaults to the
+# current directory if unspecified.
+#$build_dir='/home/buildd/ubuntu/build';
+
+# Directory for writing build logs to
+$log_dir="/home/buildd/ubuntu/logs";
+
+# don't remove this, Perl needs it:
+1;

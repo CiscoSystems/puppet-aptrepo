@@ -1,0 +1,62 @@
+#!/bin/bash -x
+
+if ! [ "$1" = "accepted" ]
+then
+	echo "First argument should be 'accepted'. Bailing out"
+	exit 1
+fi
+
+distribution="$2"
+src="$3"
+version="$4"
+changes="$5"
+
+if ! echo $changes | grep -q _source.changes$
+then
+	echo "Only mirroring source. Bailing out"
+	exit 0
+fi
+
+i386=0
+amd64=0
+
+archs="$(dcmd --dsc grep ^Architecture: reincarnate*source.changes | cut -f2 -d': ')"
+
+if echo "${archs}" | grep -q amd64
+then
+    amd64=1
+fi
+
+if echo "${archs}" | grep -q i386
+then
+    i386=1
+fi
+
+if echo "${archs}" | grep -q all
+then
+    i386=1
+fi
+
+if echo "${archs}" | grep -q any
+then
+    i386=1
+    amd64=1
+fi
+
+if [ "$i386" = "1" ]
+then
+    echo "#!/bin/bash"
+    echo 'tmpdir=$(mkdtemp -d)'
+    echo 'cd $tmpdir'
+    echo "sbuild -d ${series} -A --arch=i386 -c ${series}-<%= name %>-i386 -n -k<$= keyid %> ${pkg}_${version}"
+    echo 'rm -rf $tmpdir'
+fi
+
+if [ "$amd64" = "1" ]
+then
+    echo "#!/bin/bash"
+    echo 'tmpdir=$(mkdtemp -d)'
+    echo 'cd $tmpdir'
+    echo "sbuild -d ${series} -A --arch=amd64 -c ${series}-<%= name %>-amd64 -n -k<$= keyid %> ${pkg}_${version}"
+    echo 'rm -rf $tmpdir'
+fi

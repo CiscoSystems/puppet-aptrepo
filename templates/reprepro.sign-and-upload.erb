@@ -1,0 +1,27 @@
+#!/bin/bash -x
+
+if ! [ "$1" = "accepted" ]
+then
+	echo "First argument should be 'accepted'. Bailing out"
+	exit 1
+fi
+
+distribution="$2"
+src="$3"
+version="$4"
+changes="$5"
+
+if ! echo $changes | grep -q _source.changes$
+then
+	echo "Only mirroring source. Bailing out"
+	exit 0
+fi
+
+tmpdir="$(mktemp -d)"
+
+cd $tmpdir
+dcmd cp $changes .
+debsign --re-sign -k<%= keyid %> *.changes
+dput ppamirror:<%= name %>-proposed *.changes
+cd 
+rm -rf "$tmpdir"

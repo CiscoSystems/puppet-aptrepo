@@ -1,0 +1,9 @@
+allow architectures 'source' by group uploaders
+allow not architectures 'source' by group builders
+
+<% uploaders.each do |uploaders| %>
+group uploaders add <%= uploaders %>+ 
+<% end %>
+<% builders.each do |builder| %>
+group builders add <%= builder %>+ 
+<% end %>
