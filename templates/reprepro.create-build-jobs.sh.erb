@@ -11,6 +11,8 @@ src="$3"
 version="$4"
 changes="$5"
 
+series="${distribution%-proposed}"
+
 if ! echo $changes | grep -q _source.changes$
 then
 	echo "Only mirroring source. Bailing out"
@@ -20,7 +22,7 @@ fi
 i386=0
 amd64=0
 
-archs="$(dcmd --dsc grep ^Architecture: reincarnate*source.changes | cut -f2 -d': ')"
+archs="$(dcmd --dsc grep ^Architecture: "$5" | cut -f2 -d':')"
 
 if echo "${archs}" | grep -q amd64
 then
@@ -45,18 +47,24 @@ fi
 
 if [ "$i386" = "1" ]
 then
-    echo "#!/bin/bash"
-    echo 'tmpdir=$(mkdtemp -d)'
-    echo 'cd $tmpdir'
-    echo "sbuild -d ${series} -A --arch=i386 -c ${series}-<%= name %>-i386 -n -k<$= keyid %> ${pkg}_${version}"
-    echo 'rm -rf $tmpdir'
+    tmpfile="<%= newjobdir %>/${src}_${version}_<%= name %>_${distribution}_i386"
+    echo "#!/bin/bash" >> "$tmpfile"
+    echo 'tmpdir=$(mktemp -d)' >> "$tmpfile"
+    echo 'cd $tmpdir' >> "$tmpfile"
+    echo "sbuild -d ${series} -A --arch=i386 -c ${series}-<%= name %>-i386 -n -k<%= keyid %> ${src}_${version}" >> "$tmpfile"
+    echo "dput -c <%= repodir %>/conf/dput.cf binaries *.changes" >> "$tmpfile"
+#    echo 'rm -rf $tmpdir' >> "$tmpfile"
+    chmod +x ${tmpfile}
 fi
 
 if [ "$amd64" = "1" ]
 then
-    echo "#!/bin/bash"
-    echo 'tmpdir=$(mkdtemp -d)'
-    echo 'cd $tmpdir'
-    echo "sbuild -d ${series} -A --arch=amd64 -c ${series}-<%= name %>-amd64 -n -k<$= keyid %> ${pkg}_${version}"
-    echo 'rm -rf $tmpdir'
+    tmpfile="<%= newjobdir %>/${src}_${version}_<%= name %>_${distribution}_amd64"
+    echo "#!/bin/bash" >> "$tmpfile"
+    echo 'tmpdir=$(mktemp -d)' >> "$tmpfile"
+    echo 'cd $tmpdir' >> "$tmpfile"
+    echo "sbuild -d ${series}  --arch=amd64 -c ${series}-<%= name %>-amd64 -n -k<%= keyid %> ${src}_${version}" >> "$tmpfile"
+    echo "dput -c <%= repodir %>/conf/dput.cf binaries *.changes" >> "$tmpfile"
+#    echo 'rm -rf $tmpdir' >> "$tmpfile"
+    chmod +x ${tmpfile}
 fi

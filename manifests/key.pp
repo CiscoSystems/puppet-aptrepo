@@ -17,6 +17,5 @@ define aptrepo::key($keydata, $id, $user = 'root') {
     unless => "/usr/bin/gpg --list-keys | grep $id",
     user => $user,
     environment => ["HOME=$home"],
-    logoutput => on_failure
   }
 }

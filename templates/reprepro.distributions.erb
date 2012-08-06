@@ -20,10 +20,10 @@ Architectures: i386 amd64 source
 Components: main
 Description: <%= description %> (staging area)
 SignWith: <%= keyid %>
-SignWith: <%= keyid %>
 Uploaders: uploaders
 Tracking: minimal includelogs
-<% if mirror_on_launchpad -%>
 Log:
+<% if mirror_on_launchpad -%>
  --changes --via=processincoming sign-and-upload
-<% end %>
+<% end -%>
+ --changes --via=processincoming create-build-jobs.sh

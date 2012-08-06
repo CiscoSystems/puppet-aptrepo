@@ -8,31 +8,55 @@ define aptrepo::distribution($suite,
                              $uploaders = [],
                              $builders = [],
                              $mirror_on_launchpad = false) {
-  file { "${::aptrepo::basedir}/$name":
+
+  $newjobdir = "${::aptrepo::basedir}/work/queue/new"
+
+  $reposdir = "${::aptrepo::basedir}/repos"
+  $repodir = "${reposdir}/$name"
+
+  file { "${repodir}":
     ensure => directory
   }
 
-  file { "${::aptrepo::basedir}/$name/conf":
+  file { "${repodir}/conf":
     ensure => directory
   }
 
-  file { "${::aptrepo::basedir}/$name/conf/incoming":
+  file { "${repodir}/incoming":
+    ensure => directory
+  }
+
+  file { "${repodir}/conf/dput.cf":
+    content => template('aptrepo/dput.cf.erb')
+  }
+
+  file { "${repodir}/conf/distributions":
+    content => template('aptrepo/reprepro.distributions.erb')
+  }
+
+  file { "${repodir}/conf/incoming":
     content => template('aptrepo/reprepro.incoming.erb')
   }
 
-  file { "${::aptrepo::basedir}/$name/conf/options":
+  file { "${repodir}/conf/options":
     content => template('aptrepo/reprepro.options.erb')
   }
 
-  file { "${::aptrepo::basedir}/$name/conf/pulls":
+  file { "${repodir}/conf/pulls":
     content => template('aptrepo/reprepro.pulls.erb')
   }
 
-  file { "${::aptrepo::basedir}/$name/conf/sign-and-upload":
-    content => template('aptrepo/reprepro.sign-and-upload.erb')
+  file { "${repodir}/conf/sign-and-upload":
+    content => template('aptrepo/reprepro.sign-and-upload.erb'),
+    mode => "0755",
   }
 
-  file { "${::aptrepo::basedir}/$name/conf/uploaders":
+  file { "${repodir}/conf/create-build-jobs.sh":
+    content => template('aptrepo/reprepro.create-build-jobs.sh.erb'),
+    mode => "0755",
+  }
+
+  file { "${repodir}/conf/uploaders":
     content => template('aptrepo/reprepro.uploaders.erb')
   }
 

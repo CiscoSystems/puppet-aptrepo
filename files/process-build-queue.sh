@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-export GNUPGHOME=$HOME/apt/.gnupg
-
 workerid="$HOSTNAME.$$"
 
 basedir="${basedir:-.}"
@@ -40,8 +38,8 @@ then
         ${workfile}
         exitcode=$?
         echo Exit code: $exitcode
-        set -ex
         exec 1>&3 2>&4
+        set -ex
         mv "${workfile}" "${finishedjobsdir}"
     done
 fi
