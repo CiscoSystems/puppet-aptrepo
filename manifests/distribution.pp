@@ -6,6 +6,7 @@ define aptrepo::distribution($suite,
                              $origin = undef,
                              $label = undef,
                              $uploaders = [],
+                             $wwwdir = undef,
                              $mirror_on_launchpad = false) {
 
   $newjobdir = "${::aptrepo::basedir}/work/queue/new"
@@ -17,6 +18,13 @@ define aptrepo::distribution($suite,
   file { "${repodir}":
     ensure => directory,
     owner => "buildd"
+  }
+
+  if (defined($wwwdir)) {
+    file { "${wwwdir}/${name}":
+      ensure => "link",
+      target => "${repodir}/repo"
+    }
   }
 
   file { "${repodir}/conf":
