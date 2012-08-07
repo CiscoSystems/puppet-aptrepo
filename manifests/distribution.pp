@@ -20,7 +20,7 @@ define aptrepo::distribution($suite,
     owner => "buildd"
   }
 
-  if (defined($wwwdir)) {
+  if ($wwwdir) {
     file { "${wwwdir}/${name}":
       ensure => "link",
       target => "${repodir}/repo"
