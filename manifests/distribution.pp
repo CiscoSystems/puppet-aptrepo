@@ -34,7 +34,8 @@ define aptrepo::distribution($suite,
 
   file { "${repodir}/incoming":
     ensure => directory,
-    owner => "buildd"
+    owner => "buildd",
+    mode => "1777"
   }
 
   file { "${repodir}/conf/dput.cf":
@@ -93,5 +94,14 @@ define aptrepo::distribution($suite,
     minute => 30
   }
 
-  aptrepo::key { $uploaders: }
+  file { "/srv/ftp/$name":
+    ensure => directory
+  }
+
+  mount { "/srv/ftp/$name":
+    device => "${repodir}/conf/incoming",
+    options => "bind",
+    fstype => "none",
+    require => [File["/srv/ftp/$name"], File["${repodir}/incoming"]], 
+  }    
 }

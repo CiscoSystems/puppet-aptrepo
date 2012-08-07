@@ -2,8 +2,23 @@ class aptrepo($basedir) {
   package { ["sbuild",
              "reprepro",
              "ubuntu-dev-tools",
-             "run-one"]:
+             "run-one",
+             "vsftpd"]:
     ensure => present
+  }
+
+  file { "/etc/vsftpd.conf":
+    source => "puppet:///modules/aptrepo/vsftpd.conf",
+    mode => 0644,
+    owner => root,
+    group => root,
+    require => Package[vsftpd],
+    notify => Exec[reload-vsftpd]
+  }
+
+  exec { "reload-vsftpd":
+    command => "/sbin/restart vsftpd",
+    refreshonly => true
   }
 
   file { "${basedir}":
