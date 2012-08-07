@@ -7,11 +7,13 @@ class aptrepo($basedir) {
   }
 
   file { "${basedir}":
-    ensure => directory
+    ensure => directory,
+    owner => "buildd"
   }
 
   file { "${basedir}/repos":
-    ensure => directory
+    ensure => directory,
+    owner => "buildd"
   }
 
   file { "/usr/local/share/keys":
@@ -20,7 +22,8 @@ class aptrepo($basedir) {
 
   file { "/usr/local/bin/refresh-schroots.sh":
     source => "puppet:///modules/aptrepo/refresh-schroots.sh",
-    mode => "0755"
+    mode => "0755",
+    owner => "buildd"
   }
 
   user { "buildd":
@@ -46,16 +49,17 @@ class aptrepo($basedir) {
 
   cron { "process-uploads":
     command => "basedir=${basedir} /usr/bin/run-one /usr/local/bin/process-uploads.sh",
-    user => root,
+    user => "buildd",
   }
 
   cron { "process-build-queue":
     command => "basedir=${basedir}/work /usr/bin/run-one /usr/local/bin/process-build-queue.sh run",
-    user => root,
+    user => "buildd",
   }
 
   file { "${basedir}/work":
-    ensure => directory
+    ensure => directory,
+    owner => "buildd"
   }
 
   exec { "/usr/local/bin/process-build-queue.sh init":
@@ -63,6 +67,7 @@ class aptrepo($basedir) {
     environment => ["basedir=${basedir}/work"],
     require => [File["${basedir}/work"],
                 File["/usr/local/bin/process-build-queue.sh"]],
+    user => "buildd"
   }
 
   file { "/home/buildd/.sbuildrc":

@@ -30,4 +30,4 @@ then
 
 fi
 
-sudo sbuild-update -udcar ${series}-${repository} --arch=${architecture}
+sbuild-update -udcar ${series}-${repository} --arch=${architecture}
