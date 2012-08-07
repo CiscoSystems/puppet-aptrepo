@@ -21,7 +21,7 @@ then
               ${mk_sbuild_extra_args} \
               ${series}
 
-    sed -i -e 's/^#source/source/g' /etc/schroot/chroot.d/sbuild-${series}-${repository}-${architecture} 
+    sudo sed -i -e 's/^#source/source/g' /etc/schroot/chroot.d/sbuild-${series}-${repository}-${architecture} 
 
     echo 'Acquire::http::Proxy::127.0.0.1 "DIRECT";' | schroot -c ${series}-${repository}-${architecture}-source -u root -- tee --append /etc/apt/apt.conf.d/99mk-sbuild-proxy
     echo "deb http://127.0.0.1/repos/${repository} $series main" | schroot -c ${series}-${repository}-${architecture}-source -u root -- tee --append /etc/apt/sources.list

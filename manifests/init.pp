@@ -76,7 +76,7 @@ class aptrepo($basedir) {
   }
 
   file { "/etc/sudoers.d/buildd":
-    content => "Cmnd_Alias BUILDD_CMDS = /usr/bin/apt-get, /usr/sbin/adduser, /bin/mkdir, /usr/sbin/debootstrap, /bin/cp, /bin/bash, /usr/bin/tee, /bin/chmod, /usr/bin/sbuild-update, /usr/bin/schroot\nbuildd ALL= NOPASSWD: SETENV: BUILDD_CMDS",
+    content => "Cmnd_Alias BUILDD_CMDS = /usr/bin/apt-get, /usr/sbin/adduser, /bin/mkdir, /bin/sed, /usr/sbin/debootstrap, /bin/cp, /bin/bash, /usr/bin/tee, /bin/chmod, /usr/bin/sbuild-update, /usr/bin/schroot\nbuildd ALL= NOPASSWD: SETENV: BUILDD_CMDS",
     mode => "0440"
   }
 }
