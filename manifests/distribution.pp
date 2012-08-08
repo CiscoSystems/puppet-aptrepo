@@ -100,7 +100,7 @@ define aptrepo::distribution($suite,
 
   mount { "/srv/ftp/$name":
     ensure => "mounted",
-    device => "${repodir}/conf/incoming",
+    device => "${repodir}/incoming",
     options => "bind",
     fstype => "none",
     require => [File["/srv/ftp/$name"], File["${repodir}/incoming"]], 
