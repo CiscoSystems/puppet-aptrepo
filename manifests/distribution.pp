@@ -99,6 +99,7 @@ define aptrepo::distribution($suite,
   }
 
   mount { "/srv/ftp/$name":
+    ensure => "mounted",
     device => "${repodir}/conf/incoming",
     options => "bind",
     fstype => "none",
