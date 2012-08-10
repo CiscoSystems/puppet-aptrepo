@@ -19,7 +19,7 @@ then
     mk-sbuild --name=${series}-${repository} \
               --arch=${architecture} \
               ${mk_sbuild_extra_args} \
-              ${series}
+              ${ubuntu_series}
 
     sudo sed -i -e 's/^#source/source/g' /etc/schroot/chroot.d/sbuild-${series}-${repository}-${architecture} 
 

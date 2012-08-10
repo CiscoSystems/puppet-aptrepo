@@ -3,6 +3,7 @@ define aptrepo::distribution($suite,
                              $description = "",
                              $keyid,
                              $codename,
+                             $ubuntu_series,
                              $origin = undef,
                              $label = undef,
                              $uploaders = [],
@@ -81,14 +82,14 @@ define aptrepo::distribution($suite,
   }
 
   cron { "${name}-i386-refresh":
-    command => "series=$suite repository=$name architecture=i386 keyid=$keyid /usr/local/bin/refresh-schroots.sh",
+    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${name} keyid=${keyid} architecture=i386 /usr/local/bin/refresh-schroots.sh",
     user => "buildd",
     hour => 2,
     minute => 0
   }
 
   cron { "${name}-amd64-refresh":
-    command => "series=$suite repository=$name architecture=amd64 keyid=$keyid /usr/local/bin/refresh-schroots.sh",
+    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${name} keyid=${keyid} architecture=amd64 /usr/local/bin/refresh-schroots.sh",
     user => "buildd",
     hour => 2,
     minute => 30
