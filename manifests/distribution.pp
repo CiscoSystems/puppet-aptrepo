@@ -7,6 +7,7 @@ define aptrepo::distribution($suite,
                              $origin = undef,
                              $label = undef,
                              $uploaders = [],
+                             $extra_builders = [],
                              $wwwdir = undef,
                              $mirror_on_launchpad = false) {
 
@@ -14,7 +15,7 @@ define aptrepo::distribution($suite,
 
   $reposdir = "${::aptrepo::basedir}/repos"
   $repodir = "${reposdir}/$name"
-  $builders = [$keyid]
+  $builders = [$extra_builders, $keyid]
 
   file { "${repodir}":
     ensure => directory,
