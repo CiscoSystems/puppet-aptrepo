@@ -23,8 +23,9 @@ define aptrepo::distribution($repository,
   }
 
   concat::fragment { "incoming-${repository}-${name}":
+    order => 15,
     target => "${incoming}",
-    content => template('aptrepo/reprepro.incoming.erb'),
+    content => "${codename}>${codename}-proposed ",
   }
 
   concat::fragment { "pulls-${repository}-${name}":

@@ -55,6 +55,18 @@ define aptrepo::repository($keyid,
     owner => "buildd"
   }
 
+  concat::fragment { "distributions-${repository}-${name}":
+    order => 14,
+    target => "${incoming}",
+    content => "Name: incoming\nIncomingDir: incoming\nTempdir: tmp\nPermit: unused_files\nCleanup: unused_files on_error\nAllow: ",
+  }
+
+  concat::fragment { "distributions-${repository}-${name}":
+    order => 16,
+    target => "${distributions}",
+    content => "\n",
+  }
+
   concat { "${pulls}":
     owner => "buildd"
   }
