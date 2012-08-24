@@ -1,4 +1,5 @@
-define aptrepo::distribution($suite,
+define aptrepo::distribution($repository, 
+                             $suite,
                              $version,
                              $description = "",
                              $keyid,

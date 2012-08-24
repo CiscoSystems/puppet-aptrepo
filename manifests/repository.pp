@@ -3,6 +3,8 @@ define aptrepo::repository($keyid,
                            $extra_builders = [],
                            $wwwdir = undef) {
 
+  include concat::setup
+
   $newjobdir = "${::aptrepo::basedir}/work/queue/new"
   $reposdir = "${::aptrepo::basedir}/repos"
   $repodir = "${reposdir}/${name}"
@@ -74,4 +76,4 @@ define aptrepo::repository($keyid,
     owner => "buildd"
   }
 
-
+}
