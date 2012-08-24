@@ -55,13 +55,13 @@ define aptrepo::repository($keyid,
     owner => "buildd"
   }
 
-  concat::fragment { "distributions-${repository}-${name}":
+  concat::fragment { "${name}-distributions-head":
     order => 14,
     target => "${incoming}",
     content => "Name: incoming\nIncomingDir: incoming\nTempdir: tmp\nPermit: unused_files\nCleanup: unused_files on_error\nAllow: ",
   }
 
-  concat::fragment { "distributions-${repository}-${name}":
+  concat::fragment { "${name}-distributions-tail":
     order => 16,
     target => "${distributions}",
     content => "\n",
