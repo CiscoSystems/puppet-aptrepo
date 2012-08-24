@@ -6,91 +6,40 @@ define aptrepo::distribution($suite,
                              $ubuntu_series,
                              $origin = undef,
                              $label = undef,
-                             $uploaders = [],
-                             $extra_builders = [],
-                             $wwwdir = undef,
                              $mirror_on_launchpad = false) {
 
   $newjobdir = "${::aptrepo::basedir}/work/queue/new"
-
   $reposdir = "${::aptrepo::basedir}/repos"
-  $repodir = "${reposdir}/$name"
+  $repodir = "${reposdir}/${repository}"
   $builders = [$extra_builders, $keyid]
+  $distributions = "${repodir}/conf/distributions"
+  $incoming = "${repodir}/conf/incoming"
+  $pulls = "${repodir}/conf/pulls"
 
-  file { "${repodir}":
-    ensure => directory,
-    owner => "buildd"
-  }
-
-  if ($wwwdir) {
-    file { "${wwwdir}/${name}":
-      ensure => "link",
-      target => "${repodir}/repo"
-    }
-  }
-
-  file { "${repodir}/conf":
-    ensure => directory,
-    owner => "buildd"
-  }
-
-  file { "${repodir}/incoming":
-    ensure => directory,
-    owner => "buildd",
-    mode => "1777"
-  }
-
-  file { "${repodir}/conf/dput.cf":
-    content => template('aptrepo/dput.cf.erb'),
-    owner => "buildd"
-  }
-
-  file { "${repodir}/conf/distributions":
+  concat::fragment { "distributions-${repository}-${name}":
+    target => "${distributions}",
     content => template('aptrepo/reprepro.distributions.erb'),
-    owner => "buildd"
   }
 
-  file { "${repodir}/conf/incoming":
+  concat::fragment { "incoming-${repository}-${name}":
+    target => "${incoming}",
     content => template('aptrepo/reprepro.incoming.erb'),
-    owner => "buildd"
   }
 
-  file { "${repodir}/conf/options":
-    content => template('aptrepo/reprepro.options.erb'),
-    owner => "buildd"
-  }
-
-  file { "${repodir}/conf/pulls":
+  concat::fragment { "pulls-${repository}-${name}":
+    target => "${pulls}",
     content => template('aptrepo/reprepro.pulls.erb'),
-    owner => "buildd"
   }
 
-  file { "${repodir}/conf/sign-and-upload":
-    content => template('aptrepo/reprepro.sign-and-upload.erb'),
-    mode => "0755",
-    owner => "buildd"
-  }
-
-  file { "${repodir}/conf/create-build-jobs.sh":
-    content => template('aptrepo/reprepro.create-build-jobs.sh.erb'),
-    mode => "0755",
-    owner => "buildd"
-  }
-
-  file { "${repodir}/conf/uploaders":
-    content => template('aptrepo/reprepro.uploaders.erb'),
-    owner => "buildd"
-  }
-
-  cron { "${name}-i386-refresh":
-    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${name} keyid=${keyid} architecture=i386 /usr/local/bin/refresh-schroots.sh",
+  cron { "${repository}-${name}-i386-refresh":
+    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${repository} keyid=${keyid} architecture=i386 /usr/local/bin/refresh-schroots.sh",
     user => "buildd",
     hour => 2,
     minute => 0
   }
 
-  cron { "${name}-amd64-refresh":
-    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${name} keyid=${keyid} architecture=amd64 /usr/local/bin/refresh-schroots.sh",
+  cron { "${repository}-${name}-amd64-refresh":
+    command => "ubuntu_series=${ubuntu_series} series=${codename} repository=${repository} keyid=${keyid} architecture=amd64 /usr/local/bin/refresh-schroots.sh",
     user => "buildd",
     hour => 2,
     minute => 30
