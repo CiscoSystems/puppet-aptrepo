@@ -22,6 +22,6 @@ tmpdir="$(mktemp -d)"
 cd $tmpdir
 dcmd cp $changes .
 debsign --re-sign -k<%= keyid %> *.changes
-dput ppamirror:<%= name %>-proposed *.changes
+dput ppamirror:<%= lp_ppa_name %>-proposed *.changes
 cd 
 rm -rf "$tmpdir"

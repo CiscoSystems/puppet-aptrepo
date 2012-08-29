@@ -7,7 +7,8 @@ define aptrepo::distribution($repository,
                              $ubuntu_series,
                              $origin = undef,
                              $label = undef,
-                             $mirror_on_launchpad = false) {
+                             $mirror_on_launchpad = false,
+                             $lp_ppa_name = "") {
 
   $newjobdir = "${::aptrepo::basedir}/work/queue/new"
   $reposdir = "${::aptrepo::basedir}/repos"
@@ -16,6 +17,10 @@ define aptrepo::distribution($repository,
   $distributions = "${repodir}/conf/distributions"
   $incoming = "${repodir}/conf/incoming"
   $pulls = "${repodir}/conf/pulls"
+
+  if ($lp_ppa_name == "") {
+    $lp_ppa_name = $name
+  }
 
   concat::fragment { "distributions-${repository}-${name}":
     target => "${distributions}",
