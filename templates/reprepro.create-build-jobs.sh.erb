@@ -49,11 +49,16 @@ if [ "$i386" = "1" ]
 then
     tmpfile="<%= newjobdir %>/${src}_${version}_<%= name %>_${distribution}_i386"
     echo "#!/bin/bash" >> "$tmpfile"
+    echo "if reprepro -b ${REPREPRO_BASE_DIR} -T deb listfilter $distribution '\$Source (== $src) , \$SourceVersion (== $version)' | grep -q ." >> "$tmpfile"
+    echo "then" >> "$tmpfile"
+    echo "    echo 'Binaries already present. Not building.'" >> "$tmpfile"
+    echo "    exit 0" >> "$tmpfile"
+    echo "fi" >> "$tmpfile"
     echo 'tmpdir=$(mktemp -d)' >> "$tmpfile"
     echo 'cd $tmpdir' >> "$tmpfile"
     echo "sbuild -d ${series} -A --arch=i386 -c ${series}-<%= name %>-i386 -n -k<%= keyid %> ${src}_${version}" >> "$tmpfile"
     echo "dput -c <%= repodir %>/conf/dput.cf binaries *.changes" >> "$tmpfile"
-#    echo 'rm -rf $tmpdir' >> "$tmpfile"
+    echo 'rm -rf $tmpdir' >> "$tmpfile"
     chmod +x ${tmpfile}
 fi
 
@@ -61,10 +66,15 @@ if [ "$amd64" = "1" ]
 then
     tmpfile="<%= newjobdir %>/${src}_${version}_<%= name %>_${distribution}_amd64"
     echo "#!/bin/bash" >> "$tmpfile"
+    echo "if reprepro -b ${REPREPRO_BASE_DIR} -T deb listfilter $distribution '\$Source (== $src) , \$SourceVersion (== $version)' | grep -q ." >> "$tmpfile"
+    echo "then" >> "$tmpfile"
+    echo "    echo 'Binaries already present. Not building.'" >> "$tmpfile"
+    echo "    exit 0" >> "$tmpfile"
+    echo "fi" >> "$tmpfile"
     echo 'tmpdir=$(mktemp -d)' >> "$tmpfile"
     echo 'cd $tmpdir' >> "$tmpfile"
     echo "sbuild -d ${series}  --arch=amd64 -c ${series}-<%= name %>-amd64 -n -k<%= keyid %> ${src}_${version}" >> "$tmpfile"
     echo "dput -c <%= repodir %>/conf/dput.cf binaries *.changes" >> "$tmpfile"
-#    echo 'rm -rf $tmpdir' >> "$tmpfile"
+    echo 'rm -rf $tmpdir' >> "$tmpfile"
     chmod +x ${tmpfile}
 fi
