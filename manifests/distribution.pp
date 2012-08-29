@@ -19,7 +19,9 @@ define aptrepo::distribution($repository,
   $pulls = "${repodir}/conf/pulls"
 
   if ($lp_ppa_name == "") {
-    $lp_ppa_name = $name
+    $lp_ppa_name_real = $name
+  } else {
+    $lp_ppa_name_real = $lp_ppa_name
   }
 
   concat::fragment { "distributions-${repository}-${name}":
