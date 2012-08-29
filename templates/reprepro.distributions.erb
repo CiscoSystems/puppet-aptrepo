@@ -24,7 +24,7 @@ Uploaders: uploaders
 Tracking: minimal includelogs
 Log:
 <% if mirror_on_launchpad -%>
- --changes --via=processincoming sign-and-upload
+ --changes --via=processincoming sign-and-upload-<%= name %>
 <% end -%>
  --changes --via=processincoming create-build-jobs.sh
 

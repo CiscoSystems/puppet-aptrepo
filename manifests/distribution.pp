@@ -63,4 +63,11 @@ define aptrepo::distribution($repository,
     fstype => "none",
     require => [File["/srv/ftp/$name"], File["${repodir}/incoming"]], 
   }    
+
+  file { "${repodir}/conf/sign-and-upload-${name}":
+    content => template('aptrepo/reprepro.sign-and-upload.erb'),
+    mode => "0755",
+    owner => "buildd"
+  }
+
 }

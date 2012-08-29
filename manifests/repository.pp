@@ -71,12 +71,6 @@ define aptrepo::repository($keyid,
     owner => "buildd"
   }
 
-  file { "${repodir}/conf/sign-and-upload":
-    content => template('aptrepo/reprepro.sign-and-upload.erb'),
-    mode => "0755",
-    owner => "buildd"
-  }
-
   file { "${repodir}/conf/create-build-jobs.sh":
     content => template('aptrepo/reprepro.create-build-jobs.sh.erb'),
     mode => "0755",
