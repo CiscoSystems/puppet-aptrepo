@@ -21,7 +21,7 @@ tmpdir="$(mktemp -d)"
 
 cd $tmpdir
 dcmd cp $changes .
-changestool setdistribution <%= ubuntu_series %> *.changes
+changestool *.changes setdistribution <%= ubuntu_series %>
 dcmd *.changes | while read file
 do
     if ! test -f $file
