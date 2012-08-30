@@ -68,12 +68,12 @@ class aptrepo($basedir) {
   }
 
   cron { "process-uploads":
-    command => "basedir=${basedir} /usr/bin/run-one /usr/local/bin/process-uploads.sh >> /var/log/aptrepo.log",
+    command => "basedir=${basedir} /usr/bin/run-one /usr/local/bin/process-uploads.sh >> /var/log/aptrepo.log 2>&1",
     user => "buildd",
   }
 
   cron { "process-build-queue":
-    command => "basedir=${basedir}/work /usr/bin/run-one /usr/local/bin/process-build-queue.sh run >> /var/log/aptrepo.log",
+    command => "basedir=${basedir}/work /usr/bin/run-one /usr/local/bin/process-build-queue.sh run >> /var/log/aptrepo.log 2>&1",
     user => "buildd",
   }
 
