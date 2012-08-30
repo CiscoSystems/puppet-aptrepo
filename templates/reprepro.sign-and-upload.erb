@@ -21,6 +21,14 @@ tmpdir="$(mktemp -d)"
 
 cd $tmpdir
 dcmd cp $changes .
+changestool setdistribution <%= ubuntu_series %> *.changes
+dcmd *.changes | while read file
+do
+    if ! test -f $file
+    then
+        changestool *.changes dumbremove $file
+    fi
+done
 debsign --re-sign -k<%= keyid %> *.changes
 dput ppamirror:<%= lp_ppa_name_real %>-proposed *.changes
 cd 
