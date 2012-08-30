@@ -11,6 +11,6 @@ do
         continue
     fi
 
-    reprepro -b ${repodir}/${flavour} processincoming incoming
-    reprepro -b ${repodir}/${flavour} export
+    reprepro -V -b ${repodir}/${flavour} processincoming incoming
+    reprepro -V -b ${repodir}/${flavour} export
 done

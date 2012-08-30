@@ -7,6 +7,11 @@ class aptrepo($basedir) {
     ensure => present
   }
 
+  file { "/var/log/aptrepo.log":
+    owner => buildd,
+    mode => "0644",
+  }
+
   file { "/etc/vsftpd.conf":
     source => "puppet:///modules/aptrepo/vsftpd.conf",
     mode => 0644,
@@ -63,12 +68,12 @@ class aptrepo($basedir) {
   }
 
   cron { "process-uploads":
-    command => "basedir=${basedir} /usr/bin/run-one /usr/local/bin/process-uploads.sh",
+    command => "basedir=${basedir} /usr/bin/run-one /usr/local/bin/process-uploads.sh >> /var/log/aptrepo.log",
     user => "buildd",
   }
 
   cron { "process-build-queue":
-    command => "basedir=${basedir}/work /usr/bin/run-one /usr/local/bin/process-build-queue.sh run",
+    command => "basedir=${basedir}/work /usr/bin/run-one /usr/local/bin/process-build-queue.sh run >> /var/log/aptrepo.log",
     user => "buildd",
   }
 
